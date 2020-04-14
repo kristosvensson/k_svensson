@@ -1,2 +1,2 @@
 # Deep Insights
-Kul. Tufft namn. Låter som nåt från den oisynliga regeringen.
+Kul. Tufft namn. Låter som nåt från den osynliga regeringen.
