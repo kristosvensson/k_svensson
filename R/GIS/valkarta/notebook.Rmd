@@ -100,7 +100,33 @@ election_data_top_national %>%
       fill = parti
     )
   ) +
-  geom_sf()
+  geom_sf(colour = NA) + 
+  theme_void() + 
+  scale_fill_manual(
+    breaks = c("m", "s", "v"), labels = c("M", "S", "V"), values = c("#1b49dd", "#ed1b34", "#b00000")
+  )
+```
+```{r}
+election_map_result_national %<>% 
+  mutate(
+    block_h_v = ifelse(parti %in% c("m", "kd", "l", "sd"), "M-KD-L-SD", "S-C-Mp-V")
+  )
 ```
 
-
+```{r}
+election_map_result_national %>%
+  group_by(VD_NAMN, block_h_v) %>%
+  summarise(votes = sum(resultat)) %>%
+  group_by(VD_NAMN) %>%
+  slice_max(n = 1, order_by = votes, with_ties = FALSE) %>%
+  ggplot(
+    aes(
+      fill = block_h_v
+    )
+  ) +
+  geom_sf(colour = NA) + 
+  theme_void() + 
+  scale_fill_manual(
+    breaks = c("M-KD-L-SD", "S-C-Mp-V"), values = c("#1b49dd", "#ed1b34")
+  )
+```
