@@ -1,2 +1,2 @@
-# Deep Insights
-Kul. Tufft namn. Låter som nåt från den osynliga regeringen.
+# Kristofer Svensson
+Här samlar jag mina egna, privata projekt.
