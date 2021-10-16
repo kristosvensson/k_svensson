@@ -65,7 +65,11 @@ unique(election_data$valkretsnamn)
 ```
 
 ```{r}
-election_data <- election_data %>% filter(valkretsnamn == "Stockholms kommun")
+library(tidyr)
+
+election_data <- election_data %>% 
+  filter(valkretsnamn == "Stockholms kommun") %>%
+  pivot_longer(c("m":"ovr"), names_to = "parti", values_to = "resultat")
 
 head(election_data)
 ```
@@ -76,3 +80,27 @@ election_map_result_national <- inner_join(election_district_no_water, election_
 
 glimpse(election_map_result_national)
 ```
+
+```{r}
+election_data_top_national <- election_map_result_national %>%
+  group_by(VD_NAMN) %>%
+  slice_max(n = 1, order_by = resultat, with_ties = FALSE)
+
+head(election_data_top_national)
+```
+```{r}
+election_data_top_national %>%
+  group_by(parti) %>%
+  summarise(count = n())
+```
+```{r}
+election_data_top_national %>%
+  ggplot(
+    aes(
+      fill = parti
+    )
+  ) +
+  geom_sf()
+```
+
+
