@@ -1,0 +1,56 @@
+---
+title: "Election map of Stockholm 2018"
+author : "Kristofer Svensson"
+output: html_notebook
+---
+
+Trying to make a pictore of the election result from the general election 2018. 
+
+```{r}
+# Load libraries
+library(sf)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(janitor)
+```
+
+SF (Simple features), is a library for GIS purposes which can handle most of the types of GIS-files that is supported in software as QGIS and ArcGIS. 
+
+As both the election districts data and the Stockholm map is in ESRI shape file format, SF is an exellent choice for working with the files.
+
+dplyr is a standard library for working with tidy data files and comes with the Tidyverse suite of libraries, as is also the case with ggplot2 which is the standard library for making visualisations in R. Janitor is a library used for cleaning raw data.
+
+```{r reading st data 1}
+election_district_data <- st_read("data/2018_valgeografi_valdistrikt/alla_valdistrikt.shp") %>% st_transform(3011)
+
+head(election_district_data)
+```
+
+```{r filtering st data 1}
+election_district_data %<>%
+  filter(KOM == "0180") 
+plot(election_district_data$geometry)
+```
+
+```{r read st data 2}
+sthlm_land_area <- st_read("data/Stockholm_Taetortskarta_Utskrift_shp/Land_area.shp") %>% st_transform(3011)
+
+plot(sthlm_land_area$geometry)
+```
+
+Mycket vatten. Slå ihop med valdistriktkarta för att få bort vatten.
+
+```{r union sf 2}
+sthlm_land_area <- sthlm_land_area %>% st_buffer(2) %>% st_union() %>% st_as_sf()
+
+plot(sthlm_land_area)
+```
+
+```{r combine sf 1 sf 2}
+election_district_no_water <- st_intersection(election_district_data, sthlm_land_area) %>% st_as_sf()
+plot(election_district_no_water$geometry)
+```
+
+
+
