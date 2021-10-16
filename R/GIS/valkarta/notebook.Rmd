@@ -12,7 +12,6 @@ library(sf)
 library(dplyr)
 library(magrittr)
 library(ggplot2)
-library(janitor)
 ```
 
 SF (Simple features), is a library for GIS purposes which can handle most of the types of GIS-files that is supported in software as QGIS and ArcGIS. 
@@ -52,5 +51,28 @@ election_district_no_water <- st_intersection(election_district_data, sthlm_land
 plot(election_district_no_water$geometry)
 ```
 
+```{r read xl}
+library(readxl)
+library(janitor)
+
+election_data <- read_excel("data/tab5_riksdag.xlsx") %>% clean_names() %>% remove_empty()
+
+head(election_data)
+```
+
+```{r valkretsar}
+unique(election_data$valkretsnamn)
+```
+
+```{r}
+election_data <- election_data %>% filter(valkretsnamn == "Stockholms kommun")
+
+head(election_data)
+```
 
 
+```{r}
+election_map_result_national <- inner_join(election_district_no_water, election_data, by = c("VD_NAMN" = "valdistriktsnamn"))
+
+glimpse(election_map_result_national)
+```
