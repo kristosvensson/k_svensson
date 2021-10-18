@@ -129,3 +129,28 @@ election_map_result_national %>%
     breaks = c("M-KD-L-SD", "S-C-Mp-V"), values = c("#1b49dd", "#ed1b34")
   )
 ```
+```{r}
+election_map_result_national %>%
+  group_by(parti) %>%
+  summarise(votes = sum(resultat)/sum(election_map_result_national$resultat)) %>%
+  ggplot(
+    aes(x = parti, y = votes)
+  ) +
+  geom_col() +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::label_percent())
+```
+It's hard to visualise this.
+Dot density map can be the way to go! 
+  
+```{r dot-density-map}
+st_sample(election_map_result_national, 10) 
+```
+
+
+
+
+
+
+
+
