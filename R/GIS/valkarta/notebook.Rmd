@@ -1,12 +1,15 @@
 ---
 title: "Election map of Stockholm 2018"
 author : "Kristofer Svensson"
-output: html_notebook
+output: 
+  html_document: 
+    highlight: pygments
+    theme: journal
 ---
 
 Trying to make a pictore of the election result from the general election 2018. 
 
-```{r, echo = "FALSE"}
+```{r load-libraries}
 # Load libraries
 library(sf)
 library(dplyr)
@@ -20,35 +23,31 @@ As both the election districts data and the Stockholm map is in ESRI shape file 
 
 dplyr is a standard library for working with tidy data files and comes with the Tidyverse suite of libraries, as is also the case with ggplot2 which is the de fact standard library for making visualisations in R.
 
-```{r reading-election-district-sf, echo = "FALSE"}
+```{r reading-election-district-sf}
 election_district_data <- st_read("data/2018_valgeografi_valdistrikt/alla_valdistrikt.shp") %>% st_transform(3011)
-
-head(election_district_data)
 ```
 
-```{r filtering-election-district-sthlm, echo = "FALSE"}
+```{r filtering-election-district-sthlm}
 election_district_data %<>%
   filter(KOM == "0180") 
 plot(election_district_data$geometry)
 ```
 
-```{r read-land-sf, echo = "FALSE"}
+```{r read-land-sf}
 sthlm_land_area <- st_read("data/Stockholm_Taetortskarta_Utskrift_shp/Land_area.shp") %>% 
   st_transform(3011) %>%
   st_union() %>% 
   st_as_sf()
-
-plot(sthlm_land_area)
 ```
 
 Mycket vatten. Slå ihop med valdistriktkarta för att få bort vatten.
 
-```{r intersect-sf-1-sf-2, echo = "FALSE"}
+```{r intersect-sf-1-sf-2}
 election_district_no_water <- st_intersection(election_district_data, sthlm_land_area)
 plot(election_district_no_water$geometry)
 ```
 
-```{r read-election-data, echo="FALSE"}
+```{r read-election-data}
 library(readxl) # for reading excel
 library(janitor) # for cleaning data
 
@@ -57,10 +56,6 @@ election_data <- read_excel("data/tab5_riksdag.xlsx") %>% clean_names() %>% remo
 head(election_data)
 ```
 
-```{r show-valkretsar}
-unique(election_data$valkretsnamn)
-```
-We can see that we are lucky: Stockholms kommun is a separate factor, so we can filter out the districts we are interested in by just filter for the 'valkrets' variable.
 ```{r election-data-longer, echo = "FALSE"}
 library(tidyr) # library for making data 'tidy'
 
