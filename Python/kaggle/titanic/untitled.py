@@ -14,8 +14,8 @@ print(train_df)
 from sklearn.ensemble import RandomForestClassifier
 
 X = train_df.loc[:,["Pclass","Sex","Age","SibSp"]]
-X = pd.get_dummies(X, "Sex").loc[:,["Pclass","Sex_female","Age","SibSp"]]
-X = X.fillna(X.median())
+X = pd.get_dummies(X, columns = {"Pclass","Sex"}).loc[:,["Pclass_1","Pclass_2", "Pclass_3","Sex_female","Age","SibSp"]]
+X = X.fillna(abs(np.random.randn() * X.max()))
 
 y = train_df["Survived"]
 
@@ -23,13 +23,13 @@ y = train_df["Survived"]
 
 print(X)
 
-clf = RandomForestClassifier(n_estimators = 10)
+clf = RandomForestClassifier(n_estimators = 50)
 clf = clf.fit(X, y)
 print(clf.score(X, y))
 
 X_test = test_df.loc[:,["Pclass","Sex","Age","SibSp"]]
-X_test = pd.get_dummies(X_test, "Sex").loc[:,["Pclass","Sex_female","Age","SibSp"]]
-X_test = X_test.fillna(X.median())
+X_test = pd.get_dummies(X_test, columns = {"Pclass","Sex"}).loc[:,["Pclass_1", "Pclass_2", "Pclass_3","Sex_female","Age","SibSp"]]
+X_test = X_test.fillna(abs(np.random.randn() * X_test.median()))
 
 y_test = clf.predict(X_test)
 
@@ -41,4 +41,4 @@ result["Survived"] = y_test.tolist()
 
 print(result)
 
-result.to_csv("utdata/random_forest_submission.csv")
+result.to_csv("utdata/random_forest_submission.csv", index = False)
