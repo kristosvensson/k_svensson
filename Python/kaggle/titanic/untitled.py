@@ -3,42 +3,90 @@
 ## Read libraries and training data
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 train_df = pd.read_csv("data/train.csv")
 test_df = pd.read_csv("data/test.csv")
 
+print(train_df.head())
+
+
+## Data exploration
+print(train_df.info())
+
+### Survived vs sex
+plt.subplot(121)
+plt.hist(train_df.loc[train_df['Sex'] == 'male']['Survived'], bins = 2)
+plt.grid(True)
+plt.title('Male')
+
+plt.subplot(122)
+plt.hist(train_df.loc[train_df['Sex'] == 'female']['Survived'], bins = 2)
+plt.grid(True)
+plt.title('Female')
+
+plt.show()
+
+### Survived vs age
+train_df.boxplot(column = 'Age', by = 'Survived')
+plt.title('Age vs. Survival')
+plt.show()
+
+### Survived vs class
+plt.subplot(131)
+plt.hist(train_df.loc[train_df['Pclass'] == 1]['Survived'], bins = 2)
+plt.grid(True)
+plt.title('1st class')
+
+plt.subplot(132)
+plt.hist(train_df.loc[train_df['Pclass'] == 2]['Survived'], bins = 2)
+plt.grid(True)
+plt.title('2nd class')
+
+plt.subplot(133)
+plt.hist(train_df.loc[train_df['Pclass'] == 3]['Survived'], bins = 2)
+plt.grid(True)
+plt.title('3rd class')
+
+plt.show()
+
+### Survived vs age
+train_df.boxplot(column = 'SibSp', by = 'Survived')
+plt.title('SibSp vs. Survival')
+plt.show()
+
+## Mutate new columns - 'age group' and 'alone'
+train_df['Age_group'] = train_df['Age'].apply(lambda x: 'child' if x < 10 else( 'teen' if x < 20  else( 'adult' if x < 70 else 'elder' )))
 print(train_df)
 
-## Prepare model
+### plot survived by age group
+stacked_data = pd.pivot_table(train_df.loc[:,['Survived','Age_group']], index=['Survived'], columns=['Age_group'], aggfunc=len)
+stacked_data.transpose().apply(lambda x: x*100/sum(x), axis=1).loc[['child','teen','adult','elder'],:].plot(kind="bar", stacked=True)
+plt.show()
 
-from sklearn.ensemble import RandomForestClassifier
+### print survived by gender
+men_survived = train_df[(train_df['Sex']=='male')&(train_df['Survived']==1)]['Survived'].count()
+men_total = train_df[train_df['Sex']=='male']['Survived'].count()
+share_men_survived = men_survived / men_total
+print("share of men in training data that survived: ", share_men_survived)
 
-X = train_df.loc[:,["Pclass","Sex","Age","SibSp"]]
-X = pd.get_dummies(X, columns = {"Pclass","Sex"}).loc[:,["Pclass_1","Pclass_2", "Pclass_3","Sex_female","Age","SibSp"]]
-X = X.fillna(abs(np.random.randn() * X.max()))
+female_survived = train_df[(train_df['Sex']=='female')&(train_df['Survived']==1)]['Survived'].count()
+female_total = train_df[train_df['Sex']=='female']['Survived'].count()
+share_female_survived = female_survived / female_total
+print("share of women in training data that survived: ", share_female_survived)
 
-y = train_df["Survived"]
+## Fill missing values
+def fill_na_int(data, column):
+    data[column] = data[column].fillna(round(data[column].std() * np.random.randn() + data[column].mean()))
+    return data
 
-## Model
+def fill_na_str(data, column):
+    data[column] = data[column].fillna(str(data[column].mode()))
+    return data
 
-print(X)
 
-clf = RandomForestClassifier(n_estimators = 50)
-clf = clf.fit(X, y)
-print(clf.score(X, y))
+train_df = fill_na_int(train_df,'Age')
+train_df = fill_na_str(train_df, 'Embarked')
 
-X_test = test_df.loc[:,["Pclass","Sex","Age","SibSp"]]
-X_test = pd.get_dummies(X_test, columns = {"Pclass","Sex"}).loc[:,["Pclass_1", "Pclass_2", "Pclass_3","Sex_female","Age","SibSp"]]
-X_test = X_test.fillna(abs(np.random.randn() * X_test.median()))
-
-y_test = clf.predict(X_test)
-
-print(y_test)
-
-result = test_df.loc[:,"PassengerId"]
-result = pd.DataFrame(result)
-result["Survived"] = y_test.tolist()
-
-print(result)
-
-result.to_csv("utdata/random_forest_submission.csv", index = False)
+print(train_df.count())
