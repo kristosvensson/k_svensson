@@ -60,14 +60,14 @@ head(election_data)
 library(tidyr) # library for making data 'tidy'
 
 election_data <- election_data %>% 
-  filter(valkretsnamn == "Stockholms kommun") %>%
-  pivot_longer(c("m":"ovr"), names_to = "parti", values_to = "resultat")
+  filter(valkretsnamn == "Stockholms kommun")
 
-head(election_data)
+election_data_longer <- election_data %>%
+  pivot_longer(c("m":"ovr"), names_to = "parti", values_to = "resultat")
 ```
 
 ```{r}
-election_map_result_national <- inner_join(election_district_no_water, election_data, by = c("VD_NAMN" = "valdistriktsnamn"))
+election_map_result_national <- inner_join(election_district_no_water, election_data_longer, by = c("VD_NAMN" = "valdistriktsnamn"))
 
 head(election_map_result_national)
 ```
@@ -113,6 +113,7 @@ election_map_result_national %>%
   summarise(votes = sum(resultat)) %>%
   group_by(VD_NAMN) %>%
   slice_max(n = 1, order_by = votes, with_ties = FALSE) %>%
+  ungroup() %>%
   ggplot(
     aes(
       fill = block_h_v
@@ -138,11 +139,23 @@ election_map_result_national %>%
 It's hard to visualise this.
 Dot density map can be the way to go! 
   
-```{r dot-density-map}
-st_sample(election_map_result_national, 10) 
+```{r create-number-of-dots-for-each-district}
+number_dots <- as.data.frame(election_data) %>%
+  select(m:sd) %>%
+  mutate_all(~(round(./25)),0)
 ```
 
-
+```{r sample-dots-for-each-district}
+library(purrr)
+dots <- map_df(names(number_dots),
+               ~st_sample(election_district_no_water, size=number_dots[,.x], type = 'random') %>%
+  st_cast("POINT") %>%
+  st_coordinates() %>%
+  as_tibble() %>%  
+  setNames(c("x","y")) %>% 
+  mutate(Parti = .x)
+)
+```
 
 
 
