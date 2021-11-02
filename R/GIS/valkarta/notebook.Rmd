@@ -142,7 +142,7 @@ Dot density map can be the way to go!
 ```{r create-number-of-dots-for-each-district}
 number_dots <- as.data.frame(election_data) %>%
   select(m:sd) %>%
-  mutate_all(~(round(./25)),0)
+  mutate_all(~(round(./40)),0)
 ```
 
 ```{r sample-dots-for-each-district}
@@ -157,8 +157,11 @@ dots <- map_df(names(number_dots),
 )
 ```
 
-
-
-
+```{r}
+ggplot() +
+  geom_sf(data = st_as_sf(sthlm_land_area), aes(fill = NA)) +
+  geom_point(data = dots %>% slice(sample(1:n())), aes(x = x, y=y, color=Parti),alpha = 0.5) +
+  theme_void()
+```
 
 
