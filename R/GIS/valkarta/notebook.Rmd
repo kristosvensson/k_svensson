@@ -158,9 +158,15 @@ dots <- map_df(names(number_dots),
 ```
 
 ```{r}
+library(stringr)
+
+sf_dots <- dots %>% mutate(Parti = str_to_title(Parti)) 
+pal <- c("Kd" = "#000077", "M" = "#006ab3", "L" = "#52bdec", "C" = "#009933", "S" = "#e8112d", "Mp" = "#83cf39", "V" = "#da291c", "Sd" = "#dddd00", "Ovr" = "#888b8d")
+
 ggplot() +
-  geom_sf(data = st_as_sf(sthlm_land_area), aes(fill = NA)) +
-  geom_point(data = dots %>% slice(sample(1:n())), aes(x = x, y=y, color=Parti),alpha = 0.5) +
+  geom_sf(data = st_as_sf(sthlm_land_area), color = NA) +
+  geom_point(data = sf_dots %>% slice(sample(1:n())), aes(x = x, y=y, color=Parti)) +
+  scale_colour_manual(values = pal) +
   theme_void()
 ```
 

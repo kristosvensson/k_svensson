@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.8
+#!/usr/local/bin/python3.9
 
 ## Read libraries and training data
 import numpy as np
@@ -90,3 +90,14 @@ train_df = fill_na_int(train_df,'Age')
 train_df = fill_na_str(train_df, 'Embarked')
 
 print(train_df.count())
+
+
+
+
+
+
+# Try it with keras:
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+
