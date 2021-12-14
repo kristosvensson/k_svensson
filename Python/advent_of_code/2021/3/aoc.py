@@ -90,6 +90,7 @@ def find_co(data):
         tmp.append(int(tmp_filter[0][i]))
     return tmp
 
+
 def main():
     data = get('aoc_input_3.txt')
     mode = get_mode(data)
