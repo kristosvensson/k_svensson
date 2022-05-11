@@ -1,0 +1,78 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r echo = F}
+library(readr)
+library(dplyr)
+library(janitor)
+library(tidyr)
+library(lubridate)
+library(hms)
+library(magrittr)
+library(ggplot2)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+```{r echo = F}
+cykeldata_arstabron <- read_csv("indata/Årstabron.csv", skip = 1)[,1:2] %>% 
+  clean_names() %>%
+  mutate(
+    date = as_date(as_datetime(time, "%e %b %Y %R", tz = "Europe/Stockholm"))
+  ) %>%
+  group_by(date) %>%
+  summarise(volym = sum(arstabron)) %>%
+  mutate(veckodag = wday(date, week_start = 1))
+``` 
+
+```{r echo = F}
+smhi_data <- read_csv2("indata/smhi_sthlm.csv", skip = 8)[,1:3] %>%
+  clean_names() %>%
+  mutate(lufttemperatur = as.numeric(lufttemperatur)) %>%
+  group_by(datum) %>%
+  summarise(medeltemperatur = round(mean(lufttemperatur), 3))
+```
+
+```{r}
+cykeldata_arstabron %<>% left_join(smhi_data, by = c("date" = "datum"))
+```
+
+```{r echo = F}
+smhi_regn <- read_csv2("indata/smhi_regn.csv", skip = 8)[,1:4] %>%
+  clean_names() %>%
+  mutate(nederbordsmangd = as.numeric(nederbordsmangd)) %>%
+  group_by(representativt_dygn) %>%
+  summarise(nederbord = mean(nederbordsmangd))
+```
+
+```{r}
+cykeldata_arstabron %<>% left_join(smhi_regn, by = c("date" = "representativt_dygn"))
+```
+
+```{r}
+cykeldata_arstabron %>%
+  filter(date >= "2020-01-01") %>%
+  ggplot(aes(x = date, y = volym)) +
+  geom_line() +
+  theme_minimal()
+```
+
+```{python}
+import numpy as np
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+```
+
+
+
