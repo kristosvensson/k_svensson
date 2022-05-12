@@ -86,12 +86,16 @@ cykeldata_arstabron %<>%
   )
 ```
 
-```{python}
-import numpy as np
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
+```{r}
+train_data <- cykeldata_arstabron %>% filter(date < "2019-01-01") %>% subset(select = c(1,3,4,5,6,7,8))
+train_label <- cykeldata_arstabron %>% filter(date < "2019-01-01") %>% subset(select = 2)
+
+test_data <- cykeldata_arstabron %>% filter(date >= "2019-01-01") %>% subset(select = c(1,3,4,5,6,7,8))
+test_label <- cykeldata_arstabron %>% filter(date >= "2019-01-01") %>% subset(select = 2)
 ```
 
+```{r}
+library(keras)
 
 
+```
