@@ -336,9 +336,20 @@ date (1): Representativt dygn
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY3lrZWxkYXRhX2Fyc3RhYnJvbiAlPD4lIGxlZnRfam9pbihzbWhpX3JlZ24sIGJ5ID0gYyhcImRhdGVcIiA9IFwicmVwcmVzZW50YXRpdnRfZHlnblwiKSlcbmBgYCJ9 -->
-<pre class="r"><code>cykeldata_arstabron %&lt;&gt;% left_join(smhi_regn, by = c(&quot;date&quot; = &quot;representativt_dygn&quot;))</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY3lrZWxkYXRhX2Fyc3RhYnJvbiAlPD4lIFxuICBsZWZ0X2pvaW4oc21oaV9yZWduLCBieSA9IGMoXCJkYXRlXCIgPSBcInJlcHJlc2VudGF0aXZ0X2R5Z25cIikpICU+JVxuICBtdXRhdGUoXG4gICAgbWVkZWx0ZW1wZXJhdHVyX2RhZ2VuX2lubmFuID0gbGFnKG1lZGVsdGVtcGVyYXR1ciwgb3JkZXJfYnkgPSBkYXRlKSxcbiAgICBuZWRlcmJvcmRfZGFnZW5faW5uYW4gPSBsYWcobmVkZXJib3JkLCBvcmRlcl9ieSA9IGRhdGUpXG4gIClcbmBgYCJ9 -->
+<pre class="r"><code>cykeldata_arstabron %&lt;&gt;% 
+  left_join(smhi_regn, by = c(&quot;date&quot; = &quot;representativt_dygn&quot;)) %&gt;%
+  mutate(
+    medeltemperatur_dagen_innan = lag(medeltemperatur, order_by = date),
+    nederbord_dagen_innan = lag(nederbord, order_by = date)
+  )</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3I6IFByb2JsZW0gd2l0aCBgbXV0YXRlKClgIGNvbHVtbiBgbmVkZXJib3JkX2RhZ2VuX2lubmFuYC5cbuKEuSBgbmVkZXJib3JkX2RhZ2VuX2lubmFuID0gbGFnKG5lZGVyYm9yZCwgb3JkZXJfYnkgPSBkYXRlKWAuXG54IG9iamVjdCAnbmVkZXJib3JkJyBub3QgZm91bmRcblJ1biBgcmxhbmc6Omxhc3RfZXJyb3IoKWAgdG8gc2VlIHdoZXJlIHRoZSBlcnJvciBvY2N1cnJlZC5cbiJ9 -->
+<pre><code>Error: Problem with `mutate()` column `nederbord_dagen_innan`.
+ℹ `nederbord_dagen_innan = lag(nederbord, order_by = date)`.
+x object &#39;nederbord&#39; not found
+Run `rlang::last_error()` to see where the error occurred.</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
@@ -360,14 +371,44 @@ date (1): Representativt dygn
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgcHl0aG9uXG5yZXRpY3VsYXRlOjpyZXBsX3B5dGhvbigpXG5gYGAifQ== -->
-<pre class="python"><code>reticulate::repl_python()</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY3lrZWxkYXRhX2Fyc3RhYnJvbiA8LSBjeWtlbGRhdGFfYXJzdGFicm9uICU+JVxuICBtdXRhdGUoXG4gICAgbWVkZWx0ZW1wZXJhdHVyX2RhZ2VuX2lubmFuID0gbGFnKG1lZGVsdGVtcGVyYXR1ciwgb3JkZXJfYnkgPSBkYXRlKSxcbiAgICBuZWRlcmJvcmRfZGFnZW5faW5uYW4gPSBsYWcobmVkZXJib3JkLCBvcmRlcl9ieSA9IGRhdGUpXG4gIClcbmBgYCJ9 -->
+<pre class="r"><code>cykeldata_arstabron &lt;- cykeldata_arstabron %&gt;%
+  mutate(
+    medeltemperatur_dagen_innan = lag(medeltemperatur, order_by = date),
+    nederbord_dagen_innan = lag(nederbord, order_by = date)
+  )</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUHl0aG9uIDMuOC4xICgvdXNyL2xvY2FsL2Jpbi9weXRob24zLjgpXG5SZXRpY3VsYXRlIDEuMjUgUkVQTCAtLSBBIFB5dGhvbiBpbnRlcnByZXRlciBpbiBSLlxuRW50ZXIgJ2V4aXQnIG9yICdxdWl0JyB0byBleGl0IHRoZSBSRVBMIGFuZCByZXR1cm4gdG8gUi5cbiJ9 -->
-<pre><code>Python 3.8.1 (/usr/local/bin/python3.8)
-Reticulate 1.25 REPL -- A Python interpreter in R.
-Enter &#39;exit&#39; or &#39;quit&#39; to exit the REPL and return to R.</code></pre>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaG9saWRheXMgPC0gcmVhZF9jc3YoXCJpbmRhdGEvaG9saWRheXMuY3N2XCIpICU+JSBjbGVhbl9uYW1lcygpXG5gYGAifQ== -->
+<pre class="r"><code>holidays &lt;- read_csv(&quot;indata/holidays.csv&quot;) %&gt;% clean_names()</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMTMwIENvbHVtbnM6IDJcbuKUgOKUgCBDb2x1bW4gc3BlY2lmaWNhdGlvbiDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIBcbkRlbGltaXRlcjogXCIsXCJcbmNociAgKDEpOiBEYXlcbmRhdGUgKDEpOiBEYXRlXG5cbuKEuSBVc2UgYHNwZWMoKWAgdG8gcmV0cmlldmUgdGhlIGZ1bGwgY29sdW1uIHNwZWNpZmljYXRpb24gZm9yIHRoaXMgZGF0YS5cbuKEuSBTcGVjaWZ5IHRoZSBjb2x1bW4gdHlwZXMgb3Igc2V0IGBzaG93X2NvbF90eXBlcyA9IEZBTFNFYCB0byBxdWlldCB0aGlzIG1lc3NhZ2UuXG4ifQ== -->
+<pre><code>Rows: 130 Columns: 2
+── Column specification ───────────────────────────────────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr  (1): Day
+date (1): Date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY3lrZWxkYXRhX2Fyc3RhYnJvbiAlPD4lIFxuICBtdXRhdGUoXG4gICAgaGVsZ2RhZyA9IGlmZWxzZShkYXRlICVpbiUgaG9saWRheXMkZGF0ZSwgMSwgMClcbiAgKVxuYGBgIn0= -->
+<pre class="r"><code>cykeldata_arstabron %&lt;&gt;% 
+  mutate(
+    helgdag = ifelse(date %in% holidays$date, 1, 0)
+  )</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgcHl0aG9uXG5pbXBvcnQgbnVtcHkgYXMgbnBcbmltcG9ydCB0ZW5zb3JmbG93IGFzIHRmXG5mcm9tIHRlbnNvcmZsb3cgaW1wb3J0IGtlcmFzXG5mcm9tIHRlbnNvcmZsb3cua2VyYXMgaW1wb3J0IGxheWVyc1xuYGBgIn0= -->
 <pre class="python"><code>import numpy as np
 import tensorflow as tf
@@ -378,7 +419,7 @@ from tensorflow.keras import layers</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gCgpUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ21kK1NoaWZ0K0VudGVyKi4gCgpgYGB7ciBlY2hvID0gRn0KbGlicmFyeShyZWFkcikKbGlicmFyeShkcGx5cikKbGlicmFyeShqYW5pdG9yKQpsaWJyYXJ5KHRpZHlyKQpsaWJyYXJ5KGx1YnJpZGF0ZSkKbGlicmFyeShobXMpCmxpYnJhcnkobWFncml0dHIpCmxpYnJhcnkoZ2dwbG90MikKYGBgCgpBZGQgYSBuZXcgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpJbnNlcnQgQ2h1bmsqIGJ1dHRvbiBvbiB0aGUgdG9vbGJhciBvciBieSBwcmVzc2luZyAqQ21kK09wdGlvbitJKi4KCldoZW4geW91IHNhdmUgdGhlIG5vdGVib29rLCBhbiBIVE1MIGZpbGUgY29udGFpbmluZyB0aGUgY29kZSBhbmQgb3V0cHV0IHdpbGwgYmUgc2F2ZWQgYWxvbmdzaWRlIGl0IChjbGljayB0aGUgKlByZXZpZXcqIGJ1dHRvbiBvciBwcmVzcyAqQ21kK1NoaWZ0K0sqIHRvIHByZXZpZXcgdGhlIEhUTUwgZmlsZSkuIAoKVGhlIHByZXZpZXcgc2hvd3MgeW91IGEgcmVuZGVyZWQgSFRNTCBjb3B5IG9mIHRoZSBjb250ZW50cyBvZiB0aGUgZWRpdG9yLiBDb25zZXF1ZW50bHksIHVubGlrZSAqS25pdCosICpQcmV2aWV3KiBkb2VzIG5vdCBydW4gYW55IFIgY29kZSBjaHVua3MuIEluc3RlYWQsIHRoZSBvdXRwdXQgb2YgdGhlIGNodW5rIHdoZW4gaXQgd2FzIGxhc3QgcnVuIGluIHRoZSBlZGl0b3IgaXMgZGlzcGxheWVkLgoKYGBge3IgZWNobyA9IEZ9CmN5a2VsZGF0YV9hcnN0YWJyb24gPC0gcmVhZF9jc3YoImluZGF0YS/DhXJzdGFicm9uLmNzdiIsIHNraXAgPSAxKVssMToyXSAlPiUgCiAgY2xlYW5fbmFtZXMoKSAlPiUKICBtdXRhdGUoCiAgICBkYXRlID0gYXNfZGF0ZShhc19kYXRldGltZSh0aW1lLCAiJWUgJWIgJVkgJVIiLCB0eiA9ICJFdXJvcGUvU3RvY2tob2xtIikpCiAgKSAlPiUKICBncm91cF9ieShkYXRlKSAlPiUKICBzdW1tYXJpc2Uodm9seW0gPSBzdW0oYXJzdGFicm9uKSkgJT4lCiAgbXV0YXRlKHZlY2tvZGFnID0gd2RheShkYXRlLCB3ZWVrX3N0YXJ0ID0gMSkpCmBgYCAKCmBgYHtyIGVjaG8gPSBGfQpzbWhpX2RhdGEgPC0gcmVhZF9jc3YyKCJpbmRhdGEvc21oaV9zdGhsbS5jc3YiLCBza2lwID0gOClbLDE6M10gJT4lCiAgY2xlYW5fbmFtZXMoKSAlPiUKICBtdXRhdGUobHVmdHRlbXBlcmF0dXIgPSBhcy5udW1lcmljKGx1ZnR0ZW1wZXJhdHVyKSkgJT4lCiAgZ3JvdXBfYnkoZGF0dW0pICU+JQogIHN1bW1hcmlzZShtZWRlbHRlbXBlcmF0dXIgPSByb3VuZChtZWFuKGx1ZnR0ZW1wZXJhdHVyKSwgMykpCmBgYAoKYGBge3J9CmN5a2VsZGF0YV9hcnN0YWJyb24gJTw+JSBsZWZ0X2pvaW4oc21oaV9kYXRhLCBieSA9IGMoImRhdGUiID0gImRhdHVtIikpCmBgYAoKYGBge3IgZWNobyA9IEZ9CnNtaGlfcmVnbiA8LSByZWFkX2NzdjIoImluZGF0YS9zbWhpX3JlZ24uY3N2Iiwgc2tpcCA9IDgpWywxOjRdICU+JQogIGNsZWFuX25hbWVzKCkgJT4lCiAgbXV0YXRlKG5lZGVyYm9yZHNtYW5nZCA9IGFzLm51bWVyaWMobmVkZXJib3Jkc21hbmdkKSkgJT4lCiAgZ3JvdXBfYnkocmVwcmVzZW50YXRpdnRfZHlnbikgJT4lCiAgc3VtbWFyaXNlKG5lZGVyYm9yZCA9IG1lYW4obmVkZXJib3Jkc21hbmdkKSkKYGBgCgpgYGB7cn0KY3lrZWxkYXRhX2Fyc3RhYnJvbiAlPD4lIGxlZnRfam9pbihzbWhpX3JlZ24sIGJ5ID0gYygiZGF0ZSIgPSAicmVwcmVzZW50YXRpdnRfZHlnbiIpKQpgYGAKCmBgYHtyfQpjeWtlbGRhdGFfYXJzdGFicm9uICU+JQogIGZpbHRlcihkYXRlID49ICIyMDIwLTAxLTAxIikgJT4lCiAgZ2dwbG90KGFlcyh4ID0gZGF0ZSwgeSA9IHZvbHltKSkgKwogIGdlb21fbGluZSgpICsKICB0aGVtZV9taW5pbWFsKCkKYGBgCgpgYGB7cHl0aG9ufQppbXBvcnQgbnVtcHkgYXMgbnAKaW1wb3J0IHRlbnNvcmZsb3cgYXMgdGYKZnJvbSB0ZW5zb3JmbG93IGltcG9ydCBrZXJhcwpmcm9tIHRlbnNvcmZsb3cua2VyYXMgaW1wb3J0IGxheWVycwpgYGAKCgoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gCgpUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ21kK1NoaWZ0K0VudGVyKi4gCgpgYGB7ciBlY2hvID0gRn0KbGlicmFyeShyZWFkcikKbGlicmFyeShkcGx5cikKbGlicmFyeShqYW5pdG9yKQpsaWJyYXJ5KHRpZHlyKQpsaWJyYXJ5KGx1YnJpZGF0ZSkKbGlicmFyeShobXMpCmxpYnJhcnkobWFncml0dHIpCmxpYnJhcnkoZ2dwbG90MikKYGBgCgpBZGQgYSBuZXcgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpJbnNlcnQgQ2h1bmsqIGJ1dHRvbiBvbiB0aGUgdG9vbGJhciBvciBieSBwcmVzc2luZyAqQ21kK09wdGlvbitJKi4KCldoZW4geW91IHNhdmUgdGhlIG5vdGVib29rLCBhbiBIVE1MIGZpbGUgY29udGFpbmluZyB0aGUgY29kZSBhbmQgb3V0cHV0IHdpbGwgYmUgc2F2ZWQgYWxvbmdzaWRlIGl0IChjbGljayB0aGUgKlByZXZpZXcqIGJ1dHRvbiBvciBwcmVzcyAqQ21kK1NoaWZ0K0sqIHRvIHByZXZpZXcgdGhlIEhUTUwgZmlsZSkuIAoKVGhlIHByZXZpZXcgc2hvd3MgeW91IGEgcmVuZGVyZWQgSFRNTCBjb3B5IG9mIHRoZSBjb250ZW50cyBvZiB0aGUgZWRpdG9yLiBDb25zZXF1ZW50bHksIHVubGlrZSAqS25pdCosICpQcmV2aWV3KiBkb2VzIG5vdCBydW4gYW55IFIgY29kZSBjaHVua3MuIEluc3RlYWQsIHRoZSBvdXRwdXQgb2YgdGhlIGNodW5rIHdoZW4gaXQgd2FzIGxhc3QgcnVuIGluIHRoZSBlZGl0b3IgaXMgZGlzcGxheWVkLgoKYGBge3IgZWNobyA9IEZ9CmN5a2VsZGF0YV9hcnN0YWJyb24gPC0gcmVhZF9jc3YoImluZGF0YS/DhXJzdGFicm9uLmNzdiIsIHNraXAgPSAxKVssMToyXSAlPiUgCiAgY2xlYW5fbmFtZXMoKSAlPiUKICBtdXRhdGUoCiAgICBkYXRlID0gYXNfZGF0ZShhc19kYXRldGltZSh0aW1lLCAiJWUgJWIgJVkgJVIiLCB0eiA9ICJFdXJvcGUvU3RvY2tob2xtIikpCiAgKSAlPiUKICBncm91cF9ieShkYXRlKSAlPiUKICBzdW1tYXJpc2Uodm9seW0gPSBzdW0oYXJzdGFicm9uKSkgJT4lCiAgbXV0YXRlKHZlY2tvZGFnID0gd2RheShkYXRlLCB3ZWVrX3N0YXJ0ID0gMSkpCmBgYCAKCmBgYHtyIGVjaG8gPSBGfQpzbWhpX2RhdGEgPC0gcmVhZF9jc3YyKCJpbmRhdGEvc21oaV9zdGhsbS5jc3YiLCBza2lwID0gOClbLDE6M10gJT4lCiAgY2xlYW5fbmFtZXMoKSAlPiUKICBtdXRhdGUobHVmdHRlbXBlcmF0dXIgPSBhcy5udW1lcmljKGx1ZnR0ZW1wZXJhdHVyKSkgJT4lCiAgZ3JvdXBfYnkoZGF0dW0pICU+JQogIHN1bW1hcmlzZShtZWRlbHRlbXBlcmF0dXIgPSByb3VuZChtZWFuKGx1ZnR0ZW1wZXJhdHVyKSwgMykpCmBgYAoKYGBge3J9CmN5a2VsZGF0YV9hcnN0YWJyb24gJTw+JSBsZWZ0X2pvaW4oc21oaV9kYXRhLCBieSA9IGMoImRhdGUiID0gImRhdHVtIikpCmBgYAoKYGBge3IgZWNobyA9IEZ9CnNtaGlfcmVnbiA8LSByZWFkX2NzdjIoImluZGF0YS9zbWhpX3JlZ24uY3N2Iiwgc2tpcCA9IDgpWywxOjRdICU+JQogIGNsZWFuX25hbWVzKCkgJT4lCiAgbXV0YXRlKG5lZGVyYm9yZHNtYW5nZCA9IGFzLm51bWVyaWMobmVkZXJib3Jkc21hbmdkKSkgJT4lCiAgZ3JvdXBfYnkocmVwcmVzZW50YXRpdnRfZHlnbikgJT4lCiAgc3VtbWFyaXNlKG5lZGVyYm9yZCA9IG1lYW4obmVkZXJib3Jkc21hbmdkKSkKYGBgCgpgYGB7cn0KY3lrZWxkYXRhX2Fyc3RhYnJvbiAlPD4lIGxlZnRfam9pbihzbWhpX3JlZ24sIGJ5ID0gYygiZGF0ZSIgPSAicmVwcmVzZW50YXRpdnRfZHlnbiIpKSAKYGBgCgpgYGB7cn0KY3lrZWxkYXRhX2Fyc3RhYnJvbiAlPiUKICBmaWx0ZXIoZGF0ZSA+PSAiMjAyMC0wMS0wMSIpICU+JQogIGdncGxvdChhZXMoeCA9IGRhdGUsIHkgPSB2b2x5bSkpICsKICBnZW9tX2xpbmUoKSArCiAgdGhlbWVfbWluaW1hbCgpCmBgYAoKYGBge3J9CmN5a2VsZGF0YV9hcnN0YWJyb24gPC0gY3lrZWxkYXRhX2Fyc3RhYnJvbiAlPiUKICBtdXRhdGUoCiAgICBtZWRlbHRlbXBlcmF0dXJfZGFnZW5faW5uYW4gPSBsYWcobWVkZWx0ZW1wZXJhdHVyLCBvcmRlcl9ieSA9IGRhdGUpLAogICAgbmVkZXJib3JkX2RhZ2VuX2lubmFuID0gbGFnKG5lZGVyYm9yZCwgb3JkZXJfYnkgPSBkYXRlKQogICkKYGBgCgpgYGB7cn0KaG9saWRheXMgPC0gcmVhZF9jc3YoImluZGF0YS9ob2xpZGF5cy5jc3YiKSAlPiUgY2xlYW5fbmFtZXMoKQpgYGAKCmBgYHtyfQpjeWtlbGRhdGFfYXJzdGFicm9uICU8PiUgCiAgbXV0YXRlKAogICAgaGVsZ2RhZyA9IGlmZWxzZShkYXRlICVpbiUgaG9saWRheXMkZGF0ZSwgMSwgMCkKICApCmBgYAoKYGBge3B5dGhvbn0KaW1wb3J0IG51bXB5IGFzIG5wCmltcG9ydCB0ZW5zb3JmbG93IGFzIHRmCmZyb20gdGVuc29yZmxvdyBpbXBvcnQga2VyYXMKZnJvbSB0ZW5zb3JmbG93LmtlcmFzIGltcG9ydCBsYXllcnMKYGBgCgoKCg==</div>
 
 
 

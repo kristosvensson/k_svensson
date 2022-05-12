@@ -56,7 +56,7 @@ smhi_regn <- read_csv2("indata/smhi_regn.csv", skip = 8)[,1:4] %>%
 ```
 
 ```{r}
-cykeldata_arstabron %<>% left_join(smhi_regn, by = c("date" = "representativt_dygn"))
+cykeldata_arstabron %<>% left_join(smhi_regn, by = c("date" = "representativt_dygn")) 
 ```
 
 ```{r}
@@ -65,6 +65,25 @@ cykeldata_arstabron %>%
   ggplot(aes(x = date, y = volym)) +
   geom_line() +
   theme_minimal()
+```
+
+```{r}
+cykeldata_arstabron <- cykeldata_arstabron %>%
+  mutate(
+    medeltemperatur_dagen_innan = lag(medeltemperatur, order_by = date),
+    nederbord_dagen_innan = lag(nederbord, order_by = date)
+  )
+```
+
+```{r}
+holidays <- read_csv("indata/holidays.csv") %>% clean_names()
+```
+
+```{r}
+cykeldata_arstabron %<>% 
+  mutate(
+    helgdag = ifelse(date %in% holidays$date, 1, 0)
+  )
 ```
 
 ```{python}
